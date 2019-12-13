@@ -21,10 +21,11 @@ const connection = mysql.createConnection({
   database: conf.database
 });
 connection.connect();
+//조회
 
 app.get('/api/ticketings',(req,res) => {
     connection.query(
-      "SELECT * FROM user",
+      "SELECT * FROM Ticketing",
       (err,rows,fields) => {
         res.send(rows);
       }

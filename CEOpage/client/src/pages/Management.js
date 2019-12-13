@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import Customer from 'components/Customer';
+import TicketListTable from 'components/TicketListTable';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,7 +12,7 @@ class Management extends Component{
         constructor(props) {
         super(props);
         this.state = {
-          ticketings:null,
+          ticketings:'',
           completed:0,
           searchKeyword:''
         }
@@ -56,14 +56,13 @@ class Management extends Component{
     
       render(){
         const filteredComponents = (data) =>{
-          data = data.filter((c) => {
-            return c.phone.indexOf(this.state.searchKeyword) > -1;
-          });
+           data = data.filter((c) => {
+             return c.user_id.indexOf(this.state.searchKeyword) > -1;
+           });
           return data.map((c) => {
-            return <Customer stateRefresh={this.stateRefresh} key={c.id} id ={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+            return <TicketListTable stateRefresh={this.stateRefresh} ticketing_id={c.ticketing_id} show_id={c.show_id} user_id={c.user_id} show_check_id={c.show_check_id} reason_id={c.reason_id} show_date_id={c.show_date_id} price={c.price} ticketing_date={c.ticketing_date} refund_flag={c.refund_flag} payment_type={c.payment_type} refund_date={c.refund_date} refund_apply_date={c.refund_apply_date}/>
           })
         }
-        const { classes } = this.props;
         const cellList = ["선택", "이름", "ID", "상영작", "시간대", "좌석번호", "예매일자"]
 
     
@@ -79,13 +78,14 @@ class Management extends Component{
               </TableRow>
             </TableHead>
             <TableBody>
+              {/* {this.state.ticketings } */}
               {this.state.ticketings ? filteredComponents(this.state.ticketings) :
               <TableRow>
-                <TableCell colSpan="6" align ="center">
+                <TableCell colSpan="7" align ="center">
                   <CircularProgress  variant="determinate" value={this.state.completed}/>
                 </TableCell>
               </TableRow>
-              }
+      }
             </TableBody>
           </Table>
         </div>
