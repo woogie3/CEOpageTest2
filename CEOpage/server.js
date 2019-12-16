@@ -31,6 +31,16 @@ app.get('/api/ticketings',(req,res) => {
       }
     );
 });
+app.post(`/api/ticketings/:phone`,(req,res) => {
+  let sql = 'SELECT * FROM showdb.ticketing where user_id = (select user_id FROM showdb.user WHERE phone = ?)'
+  let params =[req.params.phone];
+  connection.query(sql, params,
+    (err, rows, fields) => {
+    res.send(rows);
+    }
+  )});
+
+  
 
 app.use('/image',express.static('./upload'));
 

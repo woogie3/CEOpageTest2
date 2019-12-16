@@ -9,6 +9,7 @@ const Menu = () => {
 
     return (
         <div>
+            
             <ul>
                 <li><NavLink exact to="/" activeStyle={activeStyle}>등록</NavLink></li>
                 <li><NavLink to="/Management" activeStyle={activeStyle}>관리</NavLink></li>

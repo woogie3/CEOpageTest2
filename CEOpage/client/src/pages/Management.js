@@ -5,7 +5,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import Container from '@material-ui/core/Container';
+import TextField from '@material-ui/core/TextField';
 import { CircularProgress } from '@material-ui/core';
+import SeatViewTable from 'components/SeatViewTable';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+
+
 
 
 class Management extends Component{
@@ -67,8 +76,9 @@ class Management extends Component{
 
     
     return (
-        <div>
-
+        
+          <div>
+           <TextField id="outlined-basic" label="전화번호 : " variant="전화번호" /> <TextField id="outlined-basic" label="예매 번호 : " variant="예매 번호" /><Button onClick="">검색</Button>
             <Table >
             <TableHead>
               <TableRow>
@@ -88,7 +98,35 @@ class Management extends Component{
       }
             </TableBody>
           </Table>
-        </div>
+          <br/>
+          
+          
+          <Container>
+            {/* <label variant="유형 : "/> */}
+            <InputLabel id="label">변경 유형 : </InputLabel>
+            <Select>
+              <MenuItem >좌석 변경</MenuItem>
+              <MenuItem>시간대 변경</MenuItem>
+            </Select>
+           
+              {/* <label variant="시간대 선택"/> */}
+              <InputLabel id="label">시간대 선택 : </InputLabel>
+              <Select>
+                <MenuItem>10:00~12:00</MenuItem>
+                <MenuItem>13:00~15:00</MenuItem>
+                <MenuItem>16:00~18:00</MenuItem>
+                <MenuItem>19:00~21:00</MenuItem>
+              </Select>
+            
+            
+              <TextField id="outlined-basic" label="변경 좌석번호 : " variant="변경 번호" />
+              <Button onClick="">변경</Button>
+              <Button type="reset">취소</Button>
+          
+          <br/>
+          <SeatViewTable/>
+          </Container>
+          </div>
     );
 };
 }
