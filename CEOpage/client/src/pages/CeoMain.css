@@ -1,10 +1,17 @@
+a{
+    text-decoration: none;
+}
+
 .logo{
-    color:gold;
+    color:red;
 }
 .clearfix h2, .ext{
     display: inline;
     vertical-align: middle;
+    margin: 5px;
 }
+
+/* 반응형 웹으로 수정시 아래 수정 */
 .owner-header>div{
     position: relative;
     min-width: 960px;
@@ -16,7 +23,7 @@
     float: right;
 }
 .owner-header{
-    border-bottom: 1px solid #E0E0E0;
+    border-bottom: 2px solid #E0E0E0;
 }
 ul, ol{
     list-style: none;
@@ -25,3 +32,25 @@ ul, ol{
 .owner-header .ext>li {
     float: left;
 }
+.own-container{
+    min-width: 996px;
+}
+.own-main{
+    width: 860px;
+    margin: 80px auto 0 auto;
+}
+
+.own-main .nav{
+    border: 1px solid #ccc;
+    list-style: none;
+}
+
+.own-main .nav>li.n1{
+    float: left;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, button, select, figure, figcaption {
+    margin: 0;
+    padding: 0;
+}
+
