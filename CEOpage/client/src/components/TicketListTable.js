@@ -6,7 +6,6 @@ class TicketListTable extends React.Component{
     render(){
         return(
             <TableRow>
-                <TableCell><input type="checkbox"/></TableCell>
                 <TableCell>{this.props.ticketing_id}</TableCell>
                 <TableCell><img src={this.props.user_id} alt="profile"/></TableCell>
                 <TableCell>{this.props.show_id}</TableCell>

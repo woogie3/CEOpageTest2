@@ -13,6 +13,7 @@ import { CircularProgress } from '@material-ui/core';
 import SeatViewTable from 'components/SeatViewTable';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import { spacing } from '@material-ui/system';
 
 
 
@@ -72,13 +73,12 @@ class Management extends Component{
             return <TicketListTable stateRefresh={this.stateRefresh} ticketing_id={c.ticketing_id} show_id={c.show_id} user_id={c.user_id} show_check_id={c.show_check_id} reason_id={c.reason_id} show_date_id={c.show_date_id} price={c.price} ticketing_date={c.ticketing_date} refund_flag={c.refund_flag} payment_type={c.payment_type} refund_date={c.refund_date} refund_apply_date={c.refund_apply_date}/>
           })
         }
-        const cellList = ["선택", "이름", "ID", "상영작", "시간대", "좌석번호", "예매일자"]
-
-    
-    return (
+        const cellList = ["이름", "ID", "상영작", "시간대", "좌석번호", "예매일자"]
         
+        return (
           <div>
-           <TextField id="outlined-basic" label="전화번호 : " variant="전화번호" /> <TextField id="outlined-basic" label="예매 번호 : " variant="예매 번호" /><Button onClick="">검색</Button>
+            
+            <Container class="ticket_list_table">
             <Table >
             <TableHead>
               <TableRow>
@@ -88,43 +88,39 @@ class Management extends Component{
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {this.state.ticketings } */}
               {this.state.ticketings ? filteredComponents(this.state.ticketings) :
               <TableRow>
-                <TableCell colSpan="7" align ="center">
+                <TableCell colSpan="6" align ="center">
                   <CircularProgress  variant="determinate" value={this.state.completed}/>
                 </TableCell>
               </TableRow>
       }
             </TableBody>
           </Table>
+          </Container>
+
+          <Container class="ticket_change_box">
+          <a><strong>예매 변경</strong></a>
           <br/>
-          
-          
-          <Container>
-            {/* <label variant="유형 : "/> */}
-            <InputLabel id="label">변경 유형 : </InputLabel>
-            <Select>
-              <MenuItem >좌석 변경</MenuItem>
-              <MenuItem>시간대 변경</MenuItem>
-            </Select>
-           
-              {/* <label variant="시간대 선택"/> */}
-              <InputLabel id="label">시간대 선택 : </InputLabel>
-              <Select>
-                <MenuItem>10:00~12:00</MenuItem>
-                <MenuItem>13:00~15:00</MenuItem>
-                <MenuItem>16:00~18:00</MenuItem>
-                <MenuItem>19:00~21:00</MenuItem>
-              </Select>
-            
-            
-              <TextField id="outlined-basic" label="변경 좌석번호 : " variant="변경 번호" />
-              <Button onClick="">변경</Button>
-              <Button type="reset">취소</Button>
-          
+          <label class="change_type">변경 유형 : </label>
+          <select id="change_type_box">
+            <option value="change_seat">좌석 변경</option>
+            <option value="change_time">시간대 변경</option>
+          </select>
+          <label class="time_select"> 시간대 선택 : </label>
+          <select id="change_time_box">
+            <option value="1">10:00~12:00</option>
+            <option value="2">13:00~14:00</option>
+            <option value="3">15:00~17:00</option>
+            <option value="4">18:00~20:00</option>
+          </select>
+          <label class="change_seat_number"> 변경 좌석번호 : </label>
+          <input type="text" class="change_seat_number_box" value="test"/>
+          <button onClick="">변경</button>
+          <button type="reset">취소</button>
           <br/>
           <SeatViewTable/>
+          <br/>
           </Container>
           </div>
     );
@@ -132,3 +128,5 @@ class Management extends Component{
 }
 
 export default Management;
+
+
