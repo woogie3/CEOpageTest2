@@ -25,7 +25,7 @@ connection.connect();
 
 app.get('/api/ticketings',(req,res) => {
     connection.query(
-      "SELECT * FROM Ticketing",
+      "select u.`name`, t.user_id, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t join `user` u on t.user_id = u.user_id join `show` s on t.show_id = s.show_id join `show_date` sd on s.show_id = sd.show_id join `book_seat` bs on t.ticketing_id = bs.ticketing_id",
       (err,rows,fields) => {
         res.send(rows);
       }
@@ -42,7 +42,6 @@ app.post(`/api/ticketings/:phone`,(req,res) => {
 
   
 
-app.use('/image',express.static('./upload'));
 
 app.post('/api/ticketings', upload.single('image'),(req,res) => {
   let sql = 'INSERT INTO user VALUES (null,?,?,?,?,?,now(),0)';

@@ -5,15 +5,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
 import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
 import { CircularProgress } from '@material-ui/core';
 import SeatViewTable from 'components/SeatViewTable';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import { spacing } from '@material-ui/system';
+import RefundListTable from '../components/RefundListTable';
 
 
 
@@ -65,19 +60,31 @@ class Management extends Component{
       }
     
       render(){
-        const filteredComponents = (data) =>{
-           data = data.filter((c) => {
+        
+        
+        const filteredComponents1 = (data1) =>{
+           data1 = data1.filter((c) => {
              return c.user_id.indexOf(this.state.searchKeyword) > -1;
-           });
-          return data.map((c) => {
-            return <TicketListTable stateRefresh={this.stateRefresh} ticketing_id={c.ticketing_id} show_id={c.show_id} user_id={c.user_id} show_check_id={c.show_check_id} reason_id={c.reason_id} show_date_id={c.show_date_id} price={c.price} ticketing_date={c.ticketing_date} refund_flag={c.refund_flag} payment_type={c.payment_type} refund_date={c.refund_date} refund_apply_date={c.refund_apply_date}/>
+            });
+          return data1.map((c) => {
+            return <TicketListTable stateRefresh={this.stateRefresh} name={c.name} user_id={c.user_id} show_title={c.show_title} show_time={c.show_time} key={c.key} ticketing_date={c.ticketing_date}/>
           })
         }
         const cellList = ["이름", "ID", "상영작", "시간대", "좌석번호", "예매일자"]
         
+        const filteredComponents2 = (data2) =>{
+          data2 = data2.filter((d) => {
+            return d.user_id.indexOf(this.state.searchKeyword) > -1;
+          });
+         return data2.map((d) => {
+           return <RefundListTable stateRefresh={this.stateRefresh} user_id={d.user_id} name={d.name} show_title={d.show_title} show_time={d.show_time} payment_type={d.payment_type} reason={d.reason_id} ticketing_id={d.ticketing_id} refund_flag={d.refund_flag} payment_type={d.payment_type} reason_type={d.reason_type}/>
+         })
+       }
+       const cellList1 = ["ID", "이름", "상영작", "시간대", "예매번호", "환불유형", "사유"]
+
         return (
           <div>
-            
+
             <Container class="ticket_list_table">
             <Table >
             <TableHead>
@@ -88,7 +95,7 @@ class Management extends Component{
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.ticketings ? filteredComponents(this.state.ticketings) :
+              {this.state.ticketings ? filteredComponents1(this.state.ticketings) :
               <TableRow>
                 <TableCell colSpan="6" align ="center">
                   <CircularProgress  variant="determinate" value={this.state.completed}/>
@@ -114,13 +121,36 @@ class Management extends Component{
             <option value="3">15:00~17:00</option>
             <option value="4">18:00~20:00</option>
           </select>
+          <form name="input" method="post" action="">
           <label class="change_seat_number"> 변경 좌석번호 : </label>
-          <input type="text" class="change_seat_number_box" value="test"/>
+          <input type="text" class="change_seat_number_box" name="memberName" maxlength="10"/>
           <button onClick="">변경</button>
-          <button type="reset">취소</button>
+          <input type="reset" value="취소"></input>
+          </form>
           <br/>
           <SeatViewTable/>
           <br/>
+          </Container>
+          <br/>
+          <Container class="ticket_list_table">
+            <Table >
+            <TableHead>
+              <TableRow>
+                {cellList1.map(d => {
+                  return <TableCell>{d}</TableCell>
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.state.ticketings ? filteredComponents2(this.state.ticketings) :
+              <TableRow>
+                <TableCell colSpan="7" align ="center">
+                  <CircularProgress  variant="determinate" value={this.state.completed}/>
+                </TableCell>
+              </TableRow>
+      }
+            </TableBody>
+          </Table>
           </Container>
           </div>
     );
