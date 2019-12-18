@@ -13,7 +13,7 @@ import RefundListTable from '../components/RefundListTable';
 
 
 
-class Management extends Component{
+class TicketManagement extends Component{
         constructor(props) {
         super(props);
         this.state = {
@@ -84,7 +84,7 @@ class Management extends Component{
 
         return (
           <div>
-
+            
             <Container class="ticket_list_table">
             <Table >
             <TableHead>
@@ -157,6 +157,6 @@ class Management extends Component{
 };
 }
 
-export default Management;
+export default TicketManagement;
 
 
