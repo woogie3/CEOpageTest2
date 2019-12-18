@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Route } from 'react-router-dom';
 import Menu from 'components/Menu';
-import { Management, Registoration, Analysis, QnA } from '../pages';
+import { ManagementMenu, Registoration, Analysis, QnA } from '../pages';
 import Header from '../components/Header';
 import Footers from '../components/Footers';
 
@@ -14,7 +14,7 @@ class App extends Component {
                 <Header/>
                 <Menu/>
                 <Route exact path="/" component={Registoration}/>
-                <Route path="/Management" component={Management}/>
+                <Route path="/ManagementMenu" component={ManagementMenu}/>
                 <Route path="/Analaysis" component={Analysis}/>
                 <Route path="/QnA" component={QnA}/>
 

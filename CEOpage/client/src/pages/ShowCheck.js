@@ -1,3 +1,4 @@
+import React from 'react';
 class ShowCheck extends React.Component{
     render(){
         return(
