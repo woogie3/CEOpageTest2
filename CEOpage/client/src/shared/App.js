@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-
 import { Route ,Switch} from 'react-router-dom';
-import { Management, Registoration, Analysis, QnA } from '../pages';
-import Footers from '../components/Footers';
-import CeoMain from '../pages/CeoMain';
-import HeaderMenu from '../components/HeaderMenu';
+
+//Router
+import { Management, Registoration, Analysis, QnA, Login, Register, CeoMain } from '../pages';
+
+// components
+import {Footers, HeaderMenu} from '../components';
 
 class App extends Component {
 
@@ -19,6 +20,8 @@ class App extends Component {
                 <Route path="/Management" component={Management}/>
                 <Route path="/Analaysis" component={Analysis}/>
                 <Route path="/QnA" component={QnA}/>
+                <Route path="/Register" component={Register}/>
+                <Route path="/Login" component={Login}/>
 
                 <Footers/>
             </div>

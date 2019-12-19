@@ -4,7 +4,7 @@ class Header extends React.Component{
     render(){
         return(
             <div> 
-                    <header id="header" class="alt">
+                    <header id="header" className="alt">
 					<h1 id="logo">연극어때</h1>
 				    </header>
 

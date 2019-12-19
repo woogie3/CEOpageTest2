@@ -77,7 +77,7 @@ class Management extends Component{
             return d.user_id.indexOf(this.state.searchKeyword) > -1;
           });
          return data2.map((d) => {
-           return <RefundListTable stateRefresh={this.stateRefresh} user_id={d.user_id} name={d.name} show_title={d.show_title} show_time={d.show_time} payment_type={d.payment_type} reason={d.reason_id} ticketing_id={d.ticketing_id} refund_flag={d.refund_flag} payment_type={d.payment_type} reason_type={d.reason_type}/>
+           return <RefundListTable stateRefresh={this.stateRefresh} user_id={d.user_id} name={d.name} show_title={d.show_title} show_time={d.show_time} payment_type={d.payment_type} reason={d.reason_id} ticketing_id={d.ticketing_id} refund_flag={d.refund_flag} reason_type={d.reason_type}/>
          })
        }
        const cellList1 = ["ID", "이름", "상영작", "시간대", "예매번호", "환불유형", "사유"]
