@@ -5,10 +5,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Container from '@material-ui/core/Container';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Box } from '@material-ui/core';
 import SeatViewTable from 'components/SeatViewTable';
 import RefundListTable from '../components/RefundListTable';
+import RefundInputForm from '../components/RefundInputForm';
+import InputBase from '@material-ui/core/InputBase';
+
 
 
 
@@ -19,7 +21,8 @@ class TicketManagement extends Component{
         this.state = {
           ticketings:'',
           completed:0,
-          searchKeyword:''
+          searchKeyword1:'',
+          searchKeyword2:''
         }
         this.stateRefresh = this.stateRefresh.bind(this);
       }
@@ -27,23 +30,37 @@ class TicketManagement extends Component{
       stateRefresh = () => {
         this.setState({
           ticketings:'',
+          refunds: '',
           completed:0,
-          searchKeyword:''
+          searchKeyword1:'',
+          searchKeyword2:''
       });
-        this.callApi()
+        this.callApi1()
         .then(res => this.setState({ticketings: res}))
         .catch(err => console.log(err));
+        this.callApi2()
+        .then(res => this.setState({refunds: res}))
+        .catch(err => console.log(err));
       }
+
     
       componentDidMount(){
         this.timer = setInterval(this.progress, 20);
-        this.callApi()
+        this.callApi1()
         .then(res => this.setState({ticketings: res}))
+        .catch(err => console.log(err));
+        this.callApi2()
+        .then(res => this.setState({refunds: res}))
         .catch(err => console.log(err));
       }
     
-      callApi = async() => {
+      callApi1 = async() => {
         const response = await fetch('/api/ticketings');
+        const body = await response.json();
+        return body;
+      }
+      callApi2 = async() => {
+        const response = await fetch('/api/refunds');
         const body = await response.json();
         return body;
       }
@@ -58,34 +75,47 @@ class TicketManagement extends Component{
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
       }
+      refundCreate = (data3) => {
+        console.log(data3);
+      }
     
       render(){
         
         
         const filteredComponents1 = (data1) =>{
            data1 = data1.filter((c) => {
-             return c.user_id.indexOf(this.state.searchKeyword) > -1;
+             return c.phone.indexOf(this.state.searchKeyword1) > -1;
             });
           return data1.map((c) => {
-            return <TicketListTable stateRefresh={this.stateRefresh} name={c.name} user_id={c.user_id} show_title={c.show_title} show_time={c.show_time} key={c.key} ticketing_date={c.ticketing_date}/>
+            return <TicketListTable stateRefresh={this.stateRefresh} name={c.name} user_id={c.user_id} phone={c.phone} show_title={c.show_title} show_time={c.show_time} keys={c.key} ticketing_date={c.ticketing_date}/>
           })
         }
-        const cellList = ["이름", "ID", "상영작", "시간대", "좌석번호", "예매일자"]
+        const cellList = ["이름", "ID", "전화번호", "상영작", "시간대", "좌석번호", "예매일자"]
         
         const filteredComponents2 = (data2) =>{
           data2 = data2.filter((d) => {
-            return d.user_id.indexOf(this.state.searchKeyword) > -1;
+            return d.phone.indexOf(this.state.searchKeyword2) > -1;
           });
          return data2.map((d) => {
-           return <RefundListTable stateRefresh={this.stateRefresh} user_id={d.user_id} name={d.name} show_title={d.show_title} show_time={d.show_time} payment_type={d.payment_type} reason={d.reason_id} ticketing_id={d.ticketing_id} refund_flag={d.refund_flag} payment_type={d.payment_type} reason_type={d.reason_type}/>
+           return <RefundListTable stateRefresh={this.stateRefresh} user_id={d.user_id} phone={d.phone} name={d.name} show_title={d.show_title} show_time={d.show_time} ticketing_id={d.ticketing_id} payment_type={d.payment_type} reason_type={d.reason_type}/>
          })
        }
-       const cellList1 = ["ID", "이름", "상영작", "시간대", "예매번호", "환불유형", "사유"]
+       const cellList1 = ["ID", "이름", "전화번호", "상영작", "시간대", "예매번호", "환불유형", "사유"]
 
         return (
           <div>
-            
-            <Container class="ticket_list_table">
+            <Box class="ticket_list_table">
+            <label class=""></label>
+            <h1>예매내역</h1>
+            <label>전화번호 - </label>
+            <InputBase
+              placeholder="검색하기"
+              
+              name="searchKeyword1"
+              value={this.state.searchKeyword1}
+              onChange = {this.handleValueChange}
+              inputProps={{ 'aria-label': 'search' }}
+            />
             <Table >
             <TableHead>
               <TableRow>
@@ -104,9 +134,9 @@ class TicketManagement extends Component{
       }
             </TableBody>
           </Table>
-          </Container>
-
-          <Container class="ticket_change_box">
+          </Box>
+          <br/>
+          <Box class="ticket_change_box">
           <a><strong>예매 변경</strong></a>
           <br/>
           <label class="change_type">변경 유형 : </label>
@@ -130,9 +160,22 @@ class TicketManagement extends Component{
           <br/>
           <SeatViewTable/>
           <br/>
-          </Container>
+          </Box>
           <br/>
-          <Container class="ticket_list_table">
+          <RefundInputForm
+            onCreate={this.refundCreate}/>
+          <br/>
+          <Box class="ticket_list_table">
+          <h2>환불내역</h2>
+          <label>전화번호 - </label>
+          <InputBase
+              placeholder="검색하기"
+              
+              name="searchKeyword2"
+              value={this.state.searchKeyword2}
+              onChange = {this.handleValueChange}
+              inputProps={{ 'aria-label': 'search' }}
+            />
             <Table >
             <TableHead>
               <TableRow>
@@ -142,7 +185,7 @@ class TicketManagement extends Component{
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.ticketings ? filteredComponents2(this.state.ticketings) :
+              {this.state.refunds ? filteredComponents2(this.state.refunds) :
               <TableRow>
                 <TableCell colSpan="7" align ="center">
                   <CircularProgress  variant="determinate" value={this.state.completed}/>
@@ -151,7 +194,8 @@ class TicketManagement extends Component{
       }
             </TableBody>
           </Table>
-          </Container>
+          </Box>
+          <br/>
           </div>
     );
 };
