@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import Menu from 'components/Menu';
 import { ManagementMenu, Registoration, Analysis, QnA } from '../pages';
-import Header from '../components/Header';
 import { Route ,Switch} from 'react-router-dom';
-import { Management, Registoration, Analysis, QnA } from '../pages';
 import Footers from '../components/Footers';
 import CeoMain from '../pages/CeoMain';
 import HeaderMenu from '../components/HeaderMenu';

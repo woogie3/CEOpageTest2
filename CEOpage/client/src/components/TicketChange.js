@@ -13,7 +13,7 @@ class TicketChange extends React.Component{
         this.handleClose = this.handleClose.bind(this);
     }
     // 버튼클릭시 사용할 메소드 :  open 정보를 변경(true로)
-    handleClickOpen(){
+    handleClickOpen = () => {
         this.setState({
             open: true
         });

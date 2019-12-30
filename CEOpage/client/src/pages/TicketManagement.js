@@ -1,20 +1,20 @@
 import React,{ Component } from 'react';
 import TicketListTable from 'components/TicketListTable';
 import Table from '@material-ui/core/Table';
+import formAxios, {post} from 'axios';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { CircularProgress, Box } from '@material-ui/core';
-import SeatViewTable from 'components/SeatViewTable';
+import InputBase from '@material-ui/core/InputBase';
 import RefundListTable from '../components/RefundListTable';
 import RefundInputForm from '../components/RefundInputForm';
-import InputBase from '@material-ui/core/InputBase';
+import SeatViewTable from 'components/SeatViewTable';
 
 
-
-
-
+const show_times=["","91221","91222","91223","91224","91225","91226"]
+const options =[ "시간대를 선택해주세요", "10:00~12:00", "13:00~15:00", "16:00~18:00", "19:00~21:00"]
 class TicketManagement extends Component{
         constructor(props) {
         super(props);
@@ -22,24 +22,67 @@ class TicketManagement extends Component{
           ticketings:'',
           completed:0,
           searchKeyword1:'',
-          searchKeyword2:''
+          searchKeyword2:'',
+          value: '',
+          show_time: '',
+          key: '',
+          show: '',
+          seatNo: '',
+          row: '',
+          column: '',
+          ticket_id: '',
+          change_type: ''
         }
         this.stateRefresh = this.stateRefresh.bind(this);
+        this.handleFormSubmit1 =this.handleFormSubmit1.bind(this);
+        this.handleFormSubmit2 =this.handleFormSubmit2.bind(this);
       }
-    
+    //   onChange(e) {
+    //     this.setState({
+    //         value: e.target.value
+    //     })
+    // }
+      
+      
+
+    formAxios = () =>{
+      var params = new URLSearchParams();
+      params.append('show_time', this.state.show_time)
+      params.append('row', this.state.row)
+      params.append('column', this.state.column)
+      params.append('ticket_id', this.state.ticket_id)
+      formAxios.post('/ticketing/changeAll', params)
+      .then((Response) => {
+        console.log(Response);
+      }).catch((ex)=>{
+        console.log(ex)
+      })
+      console.log(params)
+    }
       stateRefresh = () => {
         this.setState({
           ticketings:'',
-          refunds: '',
           completed:0,
           searchKeyword1:'',
-          searchKeyword2:''
+          searchKeyword2:'',
+          value: '',
+          key: '',
+          show_time: '',
+          seatNo: '',
+          row: '',
+          column: '',
+          ticket_id: '',
+          change_type: ''
+          
       });
         this.callApi1()
         .then(res => this.setState({ticketings: res}))
         .catch(err => console.log(err));
         this.callApi2()
         .then(res => this.setState({refunds: res}))
+        .catch(err => console.log(err));
+        this.callApi3()
+        .then(res => this.setState({seats: res}))
         .catch(err => console.log(err));
       }
 
@@ -51,6 +94,9 @@ class TicketManagement extends Component{
         .catch(err => console.log(err));
         this.callApi2()
         .then(res => this.setState({refunds: res}))
+        .catch(err => console.log(err));
+        this.callApi3()
+        .then(res => this.setState({seats: res}))
         .catch(err => console.log(err));
       }
     
@@ -64,20 +110,86 @@ class TicketManagement extends Component{
         const body = await response.json();
         return body;
       }
+      callApi3 = async() => {
+        const response = await fetch('/ticketing/seats');
+        const body = await response.json();
+        return body;
+      }
+      
     
       progress = () => {
         const {completed} = this.state;
         this.setState({completed: completed >= 100 ? 0 : completed +1});
       };
+      handleFormSubmit1(e) {
+        e.preventDefault()
+        alert(this.state.value);
+        this.formAxios();
+        // .then((response) => {
+        //   console.log(response.data);
+        //   this.props.stateRefresh();
+        // })
+        this.setState({
+          seatNo: '',
+          row: '',
+          column: '',
+          ticket_id: ''
+        })
+      }
+      handleFormSubmit2(e) {
+        e.preventDefault();
+        this.formAxios();
+        this.setState({
+          show_time: '',
+          seatNo: '',
+          row: '',
+          column: '',
+          ticket_id: ''
+        })
+      }
     
-      handleValueChange =(e) =>{
-        let nextState = {}
+    
+      handleValueChange(e) {
+        let nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
+        console.log(nextState);
       }
       refundCreate = (data3) => {
         console.log(data3);
       }
+      
+      
+      // changeTicket_Seat(){
+      //   const url = '/ticketing/changeSeat';
+      //   const axios = new Axios();
+      //   axios.append('keys', this.state.seatNo);
+      //   axios.append('row', this.state.column);
+      //   axios.append('column', this.state.column);
+      //   axios.append('id', this.state.ticket_id);
+      //   const config ={
+      //     headers: {
+      //       'content-type': 'multipart/form-data'
+      //     }
+      //   }
+      //   return post(url, axios, config)
+      // }
+      // changeTicket_All(){
+      //   const url = '/ticketing/changeAll';
+        
+      //   const axios = new Axios();
+      //   axios.append('show', this.state.show);
+      //   axios.append('keys', this.state.seatNo);
+      //   axios.append('row', this.state.column);
+      //   axios.append('column', this.state.column);
+      //   axios.append('id', this.state.ticket_id);
+      //   const config ={
+      //     headers: {
+      //       'content-type': 'multipart/form-data'
+      //     }
+      //   }
+      //   return post(url, axios, config)
+      // }
     
       render(){
         
@@ -87,10 +199,10 @@ class TicketManagement extends Component{
              return c.phone.indexOf(this.state.searchKeyword1) > -1;
             });
           return data1.map((c) => {
-            return <TicketListTable stateRefresh={this.stateRefresh} name={c.name} user_id={c.user_id} phone={c.phone} show_title={c.show_title} show_time={c.show_time} keys={c.key} ticketing_date={c.ticketing_date}/>
+            return <TicketListTable stateRefresh={this.stateRefresh} name={c.name} user_id={c.user_id} ticketing_id = {c.ticketing_id} phone={c.phone} show_title={c.show_title} show_time={c.show_time} keys={c.key} ticketing_date={c.ticketing_date}/>
           })
         }
-        const cellList = ["이름", "ID", "전화번호", "상영작", "시간대", "좌석번호", "예매일자"]
+        const cellList = ["이름", "ID", "예매 번호", "전화번호", "상영작", "시간대", "좌석번호", "예매일자"]
         
         const filteredComponents2 = (data2) =>{
           data2 = data2.filter((d) => {
@@ -102,6 +214,11 @@ class TicketManagement extends Component{
        }
        const cellList1 = ["ID", "이름", "전화번호", "상영작", "시간대", "예매번호", "환불유형", "사유"]
 
+       const seatComponents = (data3) =>{
+        return data3.map((k) => {
+          return <SeatViewTable stateRefresh={this.stateRefresh} entire_row={k.entire_row} entire_column={k.entire_column}/>
+        })
+       }
         return (
           <div>
             <Box class="ticket_list_table">
@@ -116,7 +233,7 @@ class TicketManagement extends Component{
               onChange = {this.handleValueChange}
               inputProps={{ 'aria-label': 'search' }}
             />
-            <Table >
+            <Table id="ticket-list">
             <TableHead>
               <TableRow>
                 {cellList.map(c => {
@@ -126,40 +243,60 @@ class TicketManagement extends Component{
             </TableHead>
             <TableBody>
               {this.state.ticketings ? filteredComponents1(this.state.ticketings) :
-              <TableRow>
-                <TableCell colSpan="6" align ="center">
+              <TableRow >
+                <TableCell colSpan="7" align ="center" value>
                   <CircularProgress  variant="determinate" value={this.state.completed}/>
                 </TableCell>
               </TableRow>
       }
             </TableBody>
           </Table>
+          <div id="All" ></div> 
+		      <div id="only_Ticket_id" ></div> 
           </Box>
           <br/>
           <Box class="ticket_change_box">
-          <a><strong>예매 변경</strong></a>
-          <br/>
-          <label class="change_type">변경 유형 : </label>
-          <select id="change_type_box">
-            <option value="change_seat">좌석 변경</option>
-            <option value="change_time">시간대 변경</option>
-          </select>
-          <label class="time_select"> 시간대 선택 : </label>
-          <select id="change_time_box">
-            <option value="1">10:00~12:00</option>
-            <option value="2">13:00~14:00</option>
-            <option value="3">15:00~17:00</option>
-            <option value="4">18:00~20:00</option>
-          </select>
-          <form name="input" method="post" action="">
-          <label class="change_seat_number"> 변경 좌석번호 : </label>
-          <input type="text" class="change_seat_number_box" name="memberName" maxlength="10"/>
-          <button onClick="">변경</button>
-          <input type="reset" value="취소"></input>
+
+
+          <form onSubmit={this.handleFormSubmit2}>
+              <a><strong>예매 변경</strong></a>
+              <br/>
+              <label class="change_type"> 변경 유형 : </label>
+              <select id="change_type_box">
+                <option value="change_seat">좌석 변경</option>
+                <option value="change_time">시간대 변경</option>
+              </select>
+              <br/>
+              <label class="time_select"> 시간대 선택 : </label>
+              <select name="show_times" class="show_time" onChange={this.handleValueChange}>
+               {options.map(option => {
+                   return <option value={option} key={option}>{option}</option>
+               })}
+              </select>
+              <br/>
+              <label class="change_seat_number"> 예매번호 : </label>
+              <input type="text" class="change_seat_number_box" name="ticket_id" maxlength="10" value={this.state.ticket_id} onChange={this.handleValueChange}/>
+              <br/>
+              <label class="change_seat_number"> 변경 좌석번호 : </label>
+              <input type="text" class="change_seat_number_box" name="seatNo" maxlength="5" value={this.state.seatNo} onChange={this.handleValueChange}/>
+              <input type="hidden" class="change_seat_number_box" name="row" maxlength="5" value={this.state.row} onChange={this.handleValueChange}/>
+              <input type="hidden" class="change_seat_number_box" name="column" maxlength="5" value={this.state.column} onChange={this.handleValueChange}/>
+              <br/>
+              <input type="submit" value="변경" /><br/>
+              <input type="reset" value="취소"></input><br/>
+              <br/>
+              <h3>좌석표</h3>
+              <table>
+              {this.state.seats ? seatComponents(this.state.seats) :
+                <td colSpan="7" align ="center" value>
+                  <CircularProgress  variant="determinate" value={this.state.completed}/>
+                </td>
+      }
+              </table>
+
+              <br/>
           </form>
-          <br/>
-          <SeatViewTable/>
-          <br/>
+
           </Box>
           <br/>
           <RefundInputForm
@@ -170,7 +307,6 @@ class TicketManagement extends Component{
           <label>전화번호 - </label>
           <InputBase
               placeholder="검색하기"
-              
               name="searchKeyword2"
               value={this.state.searchKeyword2}
               onChange = {this.handleValueChange}

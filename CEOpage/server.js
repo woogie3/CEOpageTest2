@@ -1,10 +1,12 @@
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
+const parser = bodyParser.json();
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true }));
+app.use(bodyParser.json());
+app.use(parser);
 
 const data = fs.readFileSync('./database.json');
 const conf = JSON.parse(data);
@@ -25,11 +27,43 @@ connection.connect();
 //조회
 app.get('/api/ticketings',(req,res) => {
     connection.query(
-      "select u.`name`, t.user_id, u.phone, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id",
+      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id",
       (err,rows,fields) => {
         res.send(rows);
       }
     );
+});
+//변경
+app.post('/ticketing/changeSeat', parser,(req, res) => {
+  let sql = 'update book_seat bs inner join ticketing t on bs.ticketing_id = t.ticketing_id set bs.key = (concat(?,concat(?,?)), bs.row = ?, bs.column = ? where t.ticketing_id=?';
+  let id1 = req.body.id;
+  let row1 = req.body.row;
+  let column1 = req.body.column;
+  let row2 = req.body.row;
+  let column2 = req.body.column;
+  let id2 = req.body.id;
+  let params = [id1, row1, column1, row2, column2, id2];
+  connection.query(sql, params,
+  (err, rows, fields) => {
+  res.send(rows);
+  }
+)
+});
+app.post('/ticketing/changeAll', parser,(req, res) => {
+  let sql = 'update ticketing t inner join book_seat on bs.ticketing_id = t.ticketing_id set t.show_date_id = ?, t.ticketing_date = sysdate(), bs.key=(concat(?,concat(?,?)), bs.row=?, bs.column=? where t.ticketing_id = ?';
+  let show_time = req.body.show_time;
+  let id1 = req.body.id;
+  let row1 = req.body.row;
+  let column1 = req.body.column;
+  let row2 = req.body.row;
+  let column2 = req.body.column;
+  let id2 = req.body.id;
+  let params = [show_time, id1, row1, column1, row2, column2, id2];
+  connection.query(sql, params,
+  (err, rows, fields) => {
+  res.send(rows);
+  }
+)
 });
 
 //검색
@@ -89,5 +123,15 @@ app.post('/api/refunds/:id', (req, res) => {
 )
 });
 
+//전체 좌석 행열조회
+app.get('/ticketing/seats', (req, res) => {
+  connection.query(
+    // "select th.entire_row, th.entire_column from theater th inner join `show` s on th.troup_id = s.show_id join ticketing t on t.show_id = s.show_id where t.ticketing_id",
+    "select th.entire_row, th.entire_column from theater th inner join `show` s on th.troup_id = s.show_id join ticketing t on t.show_id = s.show_id where t.ticketing_id='00001'",
+    (err,rows,fields) => {
+      res.send(rows);
+    }
+  );
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
