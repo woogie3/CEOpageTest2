@@ -27,7 +27,7 @@ connection.connect();
 //조회
 app.get('/api/ticketings',(req,res) => {
     connection.query(
-      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id",
+      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id where t.refund_flag='no'",
       (err,rows,fields) => {
         res.send(rows);
       }
@@ -35,14 +35,15 @@ app.get('/api/ticketings',(req,res) => {
 });
 //변경
 app.post('/ticketing/changeSeat', parser,(req, res) => {
-  let sql = 'update book_seat bs inner join ticketing t on bs.ticketing_id = t.ticketing_id set bs.key = (concat(?,concat(?,?)), bs.row = ?, bs.column = ? where t.ticketing_id=?';
-  let id1 = req.body.id;
+  let sql = "update book_seat bs, ticketing t set bs.`key`=concat(?,concat(?,?)), bs.`row` = ?, bs.`column` = ? WHERE bs.ticketing_id = t.ticketing_id and t.ticketing_id=?"
+  let id1 = req.body.ticket_id;
   let row1 = req.body.row;
   let column1 = req.body.column;
   let row2 = req.body.row;
   let column2 = req.body.column;
-  let id2 = req.body.id;
+  let id2 = req.body.ticket_id;
   let params = [id1, row1, column1, row2, column2, id2];
+  console.log(params);
   connection.query(sql, params,
   (err, rows, fields) => {
   res.send(rows);
@@ -77,30 +78,30 @@ app.post(`/api/ticketings/:phone`,(req,res) => {
   )});
 
   // id삭제버튼 클릭시
-  app.delete('/api/ticketings/:id', (req, res) => {
-    let sql = 'UPDATE user SET isDeleted = 1 WHERE id = ?';
-    let params = [req.params.id];
-    connection.query(sql, params,
-    (err, rows, fields) => {
-    res.send(rows);
-    }
-  )
-  });
+  // app.delete('/api/ticketings/:id', (req, res) => {
+  //   let sql = 'UPDATE user SET isDeleted = 1 WHERE id = ?';
+  //   let params = [req.params.id];
+  //   connection.query(sql, params,
+  //   (err, rows, fields) => {
+  //   res.send(rows);
+  //   }
+  // )
+  // });
 // 계정생성 
-app.post('/api/ticketings', upload.single('image'),(req,res) => {
-  let sql = 'INSERT INTO user VALUES (null,?,?,?,?,?,now(),0)';
-  let image = '/image/' + req.file.filename;
-  let name = req.body.name;
-  let birthday = req.body.birthday;
-  let gender = req.body.gender;
-  let job = req.body.job;
-  let params = [image,name,birthday,gender,job];
-  connection.query(sql,params,
-      (err,rows,fields) => {
-        res.send(rows);
-      }
-    );
-});
+// app.post('/api/ticketings', upload.single('image'),(req,res) => {
+//   let sql = 'INSERT INTO user VALUES (null,?,?,?,?,?,now(),0)';
+//   let image = '/image/' + req.file.filename;
+//   let name = req.body.name;
+//   let birthday = req.body.birthday;
+//   let gender = req.body.gender;
+//   let job = req.body.job;
+//   let params = [image,name,birthday,gender,job];
+//   connection.query(sql,params,
+//       (err,rows,fields) => {
+//         res.send(rows);
+//       }
+//     );
+// });
 
 {/* 환불내역 */}
 // 조회
@@ -113,9 +114,20 @@ app.get('/api/refunds',(req,res) => {
   );
 });
 // 환불 입력
-app.post('/api/refunds/:id', (req, res) => {
-  let sql = 'UPDATE ticketing t inner join book_seat bs on bs.ticketing_id = t.ticketing_id set t.refund_flag = \'yes\', t.refund_date = sysdate(), t.refund_apply_date = sysdate(), bs.row = null, bs.column = null where t.ticketing_id = ?';
-  let params = [req.params.id];
+// app.post('/api/refunds/:id', (req, res) => {
+//   let sql = 'UPDATE ticketing t inner join book_seat bs on bs.ticketing_id = t.ticketing_id set t.refund_flag = \'yes\', t.refund_date = sysdate(), t.refund_apply_date = sysdate(), bs.row = null, bs.column = null where t.ticketing_id = ?';
+//   let params = [req.params.id];
+//   connection.query(sql, params,
+//   (err, rows, fields) => {
+//   res.send(rows);
+//   }
+// )
+// });
+// 환불 적용
+app.post('/api/refunds/:ticketing_id', (req, res) => {
+  let sql = 'UPDATE book_seat bs, ticketing t set t.refund_flag= "yes" , t.refund_date=sysdate(), bs.`key`=null, bs.`row`=null, bs.`column`=null, bs.ticketing_id=null WHERE t.ticketing_id=bs.ticketing_id and t.ticketing_id = ?';
+  let params = [req.params.ticketing_id];
+  console.log(params);
   connection.query(sql, params,
   (err, rows, fields) => {
   res.send(rows);
@@ -127,7 +139,7 @@ app.post('/api/refunds/:id', (req, res) => {
 app.get('/ticketing/seats', (req, res) => {
   connection.query(
     // "select th.entire_row, th.entire_column from theater th inner join `show` s on th.troup_id = s.show_id join ticketing t on t.show_id = s.show_id where t.ticketing_id",
-    "select th.entire_row, th.entire_column from theater th inner join `show` s on th.troup_id = s.show_id join ticketing t on t.show_id = s.show_id where t.ticketing_id='00001'",
+    "select th.entire_row, th.entire_column from theater th inner join `show` s on th.troup_id = s.show_id join ticketing t on t.show_id = s.show_id where t.ticketing_id='1'",
     (err,rows,fields) => {
       res.send(rows);
     }
