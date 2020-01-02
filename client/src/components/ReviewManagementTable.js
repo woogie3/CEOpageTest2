@@ -1,12 +1,11 @@
 import React,{Component} from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import ReviewManagement from 'pages/ReviewManagement';
 import ReviewManagementDeclaration from './ReviewManagementDeclaration'
 
 
 
-class ReviewManagementTable extends React.Component{
+class ReviewManagementTable extends Component{
     render() {
         return (
             <TableRow>
