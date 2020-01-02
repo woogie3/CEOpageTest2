@@ -40,7 +40,37 @@ class ShowManagementUpdate extends Component {
     }
 
     callApi = async () => {
-        const response = await fetch('/api/showManagementUpdate');
+        const response = await fetch('/api/showManagementUpdateShow');
+        const body = await response.json();
+    
+        return body;
+    }
+
+
+
+    callApi = async () => {
+        const response = await fetch('/api/showManagementUpdateGenre');
+        const body = await response.json();
+    
+        return body;
+    }
+
+
+
+
+    callApi = async () => {
+        const response = await fetch('/api/showManagementUpdateShowDate');
+        const body = await response.json();
+    
+        return body;
+    }
+
+
+
+
+
+    callApi = async () => {
+        const response = await fetch('/api/showManagementUpdateAudiencePrice');
         const body = await response.json();
     
         return body;
