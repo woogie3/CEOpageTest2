@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
 
-class TicketChange extends React.Component {
+class TicketRefund extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,8 +29,8 @@ class TicketChange extends React.Component {
         })
     }
 
-    changeTicket(ticketing_id){
-        const url = '/ticketings/changeSeat' + ticketing_id;
+    refundTicket(ticketing_id){
+        const url = '/api/refunds/' + ticketing_id;
         fetch(url, {
            method: 'POST' 
         });
@@ -41,19 +41,19 @@ class TicketChange extends React.Component {
         return (
             <div>
                 <Button variant="contained" color="secondary" onClick={this.handleClickOpen}>
-                    변경
+                    환불
                 </Button>
                 <Dialog onClose={this.handleClose} open={this.state.open}>
                     <DialogTitle onClose={this.handleClose}>
-                        경고
+                        취소 경고
                     </DialogTitle>
                     <DialogContent>
                         <Typography gutterBottom>
-                            변경하시겠습니까?
+                            선택한 예매표는 취소됩니다.
                         </Typography>
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="contained" color="primary" onClick={(e) => {this.changeTicket(this.props.ticketing_id)}}>환불</Button>
+                        <Button variant="contained" color="primary" onClick={(e) => {this.refundTicket(this.props.ticketing_id)}}>환불</Button>
                         <Button variant="outlined" color="primary" onClick={this.handleClose}>닫기</Button>
                     </DialogActions>
                 </Dialog>
@@ -62,4 +62,4 @@ class TicketChange extends React.Component {
     }
 }
 
-export default TicketChange;
+export default TicketRefund;

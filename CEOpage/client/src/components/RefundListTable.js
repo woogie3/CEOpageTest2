@@ -2,6 +2,7 @@ import React from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 
+
 class RefundListTable extends React.Component{
     render(){
         return(
@@ -14,6 +15,7 @@ class RefundListTable extends React.Component{
                 <TableCell>{this.props.ticketing_id}</TableCell>
                 <TableCell>{this.props.payment_type}</TableCell>
                 <TableCell>{this.props.reason}</TableCell>
+                
             </TableRow>
         )
     }

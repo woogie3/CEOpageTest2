@@ -6,7 +6,7 @@ class SeatViewTable extends React.Component{
         for (let i = 0; i < this.props.entire_row; i++) {
             let children = []
             for (let j = 0; j < this.props.entire_column; j++) {
-                children.push(<td>{`Column ${j + 1}`}</td>)
+                children.push(<td>{`${i+1}${j + 1}`}</td>)
             }
             table.push(<tr>{children}</tr>)
         }

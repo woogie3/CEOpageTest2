@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import { CircularProgress, Box } from '@material-ui/core';
 import InputBase from '@material-ui/core/InputBase';
 import RefundListTable from '../components/RefundListTable';
-import RefundInputForm from '../components/RefundInputForm';
+// import RefundInputForm from '../components/RefundInputForm';
 import SeatViewTable from 'components/SeatViewTable';
 
 
@@ -51,7 +51,7 @@ class TicketManagement extends Component{
       params.append('row', this.state.row)
       params.append('column', this.state.column)
       params.append('ticket_id', this.state.ticket_id)
-      formAxios.post('/ticketing/changeAll', params)
+      formAxios.post('/ticketing/changeSeat', params)
       .then((Response) => {
         console.log(Response);
       }).catch((ex)=>{
@@ -121,9 +121,8 @@ class TicketManagement extends Component{
         const {completed} = this.state;
         this.setState({completed: completed >= 100 ? 0 : completed +1});
       };
-      handleFormSubmit1(e) {
+      handleFormSubmit1= (e) => {
         e.preventDefault()
-        alert(this.state.value);
         this.formAxios();
         // .then((response) => {
         //   console.log(response.data);
@@ -149,7 +148,7 @@ class TicketManagement extends Component{
       }
     
     
-      handleValueChange(e) {
+      handleValueChange = (e) => {
         let nextState = {};
         nextState[e.target.name] = e.target.value;
         this.setState(nextState);
@@ -258,7 +257,7 @@ class TicketManagement extends Component{
           <Box class="ticket_change_box">
 
 
-          <form onSubmit={this.handleFormSubmit2}>
+          <form onSubmit={this.handleFormSubmit1}>
               <a><strong>예매 변경</strong></a>
               <br/>
               <label class="change_type"> 변경 유형 : </label>
@@ -278,9 +277,9 @@ class TicketManagement extends Component{
               <input type="text" class="change_seat_number_box" name="ticket_id" maxlength="10" value={this.state.ticket_id} onChange={this.handleValueChange}/>
               <br/>
               <label class="change_seat_number"> 변경 좌석번호 : </label>
-              <input type="text" class="change_seat_number_box" name="seatNo" maxlength="5" value={this.state.seatNo} onChange={this.handleValueChange}/>
-              <input type="hidden" class="change_seat_number_box" name="row" maxlength="5" value={this.state.row} onChange={this.handleValueChange}/>
-              <input type="hidden" class="change_seat_number_box" name="column" maxlength="5" value={this.state.column} onChange={this.handleValueChange}/>
+              {/* <input type="text" class="change_seat_number_box" name="seatNo" maxlength="5" value={this.state.seatNo} onChange={this.handleValueChange}/> */}
+              <input type="text" class="change_seat_number_box" name="row" maxlength="5" value={this.state.row} onChange={this.handleValueChange}/>
+              <input type="text" class="change_seat_number_box" name="column" maxlength="5" value={this.state.column} onChange={this.handleValueChange}/>
               <br/>
               <input type="submit" value="변경" /><br/>
               <input type="reset" value="취소"></input><br/>
@@ -299,9 +298,9 @@ class TicketManagement extends Component{
 
           </Box>
           <br/>
-          <RefundInputForm
+          {/* <RefundInputForm
             onCreate={this.refundCreate}/>
-          <br/>
+          <br/> */}
           <Box class="ticket_list_table">
           <h2>환불내역</h2>
           <label>전화번호 - </label>
