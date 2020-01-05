@@ -1,4 +1,5 @@
 import React from 'react';
+import HeaderMenu from '../components/HeaderMenu';
 import { NavLink, Route } from 'react-router-dom';
 import ShowManagementAdd from './ShowManagementAdd';
 import TroupManagementAdd from './TroupManagementAdd';
@@ -7,6 +8,7 @@ import ShowManagement from './ShowManagement';
 const RegistorationMenu = ({match}) => {
     return (
         <div>
+            <HeaderMenu/>
            <ul>
            <li><NavLink to={`${match.path}/showManagementAdd`}>상영작등록</NavLink></li>
            <li><NavLink to={`${match.path}/troupManagementAdd`}>극단등록</NavLink></li>

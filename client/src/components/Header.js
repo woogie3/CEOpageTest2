@@ -1,11 +1,14 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 class Header extends React.Component{
     render(){
         return(
             <div> 
                     <header id="header" class="alt">
-					<h1 id="logo">연극어때</h1>
+                        <ul>
+					        <li><NavLink to="/" headers={headers}>연극 어때?</NavLink></li>
+                        </ul>
 				    </header>
 
             </div>

@@ -19,20 +19,22 @@ class App extends Component {
                 <Route exact path="/" component={CeoMain}/>
                 </Switch>
                 <div className="container">
-                <HeaderMenu/>
                     <Switch>
                         <Route exact path="/profile" component={Profile}/>
                         <Route exact path="/login" component={Login}/>
                         <Route exact path="/register" component={Register}/>
                     </Switch>
                 </div>
+                <div>
                 <Switch>
+                {/* <HeaderMenu/> */}
                 <Route path="/RegistorationMenu" component={RegistorationMenu}/>
                 <Route path="/ManagementMenu" component={ManagementMenu}/>
                 <Route path="/Analaysis" component={Analysis}/>
                 <Route path="/QnA" component={QnA}/>
                 <Route path="/QNAInsert" component={QNAInsert}/>
                 </Switch>
+                </div>
                 </Router>
                 {/* <Footers/> */}
             </div>

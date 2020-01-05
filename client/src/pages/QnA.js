@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import QNAS from '../components/QNAS';
+import HeaderMenu from '../components/HeaderMenu';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -66,6 +67,7 @@ class QnA extends Component {
 
     return (
       <div>
+        <HeaderMenu/>
         <Table >   
           <TableHead>
             <TableRow>
