@@ -6,6 +6,7 @@ import TroupManagementAdd from './TroupManagementAdd';
 import ShowManagement from './ShowManagement';
 
 const RegistorationMenu = ({match}) => {
+    
     return (
         <div>
             <HeaderMenu/>

@@ -27,7 +27,7 @@ connection.connect();
 //조회
 app.get('/api/ticketings',(req,res) => {
     connection.query(
-      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id where t.refund_flag=1",
+      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.ddshow_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id where t.refund_flag=1",
       (err,rows,fields) => {
         res.send(rows);
       }
