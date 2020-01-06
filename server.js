@@ -27,7 +27,7 @@ connection.connect();
 //조회
 app.get('/api/ticketings',(req,res) => {
     connection.query(
-      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.ddshow_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id where t.refund_flag=1",
+      "select u.`name`, t.user_id, t.ticketing_id, u.phone, s.show_title, sd.show_time, bs.`key`, t.ticketing_date from `ticketing` t left join `user` u on t.user_id = u.user_id left join `show` s on t.show_id = s.show_id left join `show_date` sd on s.show_id = sd.show_id left join `book_seat` bs on t.ticketing_id = bs.ticketing_id where t.refund_flag='환불가능'",
       (err,rows,fields) => {
         res.send(rows);
       }
@@ -107,7 +107,7 @@ app.post(`/api/ticketings/:phone`,(req,res) => {
 // 조회
 app.get('/api/refunds',(req,res) => {
   connection.query(
-    "select t.user_id, u.`name`, s.show_title, sd.show_time, t.ticketing_id, t.payment_type, r.reason_type, u.phone from `show` s left join ticketing t on s.show_id = t.show_id left join `user` u on t.user_id = u.user_id left join reason r on r.reason_id = t.reason_id left join show_date sd on sd.show_id = t.show_id where t.refund_flag='0'",
+    "select t.user_id, u.`name`, s.show_title, sd.show_time, t.ticketing_id, t.payment_type, r.reason_type, u.phone from `show` s left join ticketing t on s.show_id = t.show_id left join `user` u on t.user_id = u.user_id left join reason r on r.reason_id = t.reason_id left join show_date sd on sd.show_id = t.show_id where t.refund_flag='환불완료'",
     (err,rows,fields) => {
       res.send(rows);
     }
@@ -125,7 +125,7 @@ app.get('/api/refunds',(req,res) => {
 // });
 // 환불 적용
 app.post('/api/refunds/:ticketing_id', (req, res) => {
-  let sql = 'UPDATE book_seat bs, ticketing t set t.refund_flag="0" , t.refund_date=sysdate(), bs.`key`=null, bs.`row`=null, bs.`column`=null, bs.ticketing_id=null WHERE t.ticketing_id=bs.ticketing_id and t.ticketing_id = ?';
+  let sql = 'UPDATE book_seat bs, ticketing t set t.refund_flag="환불완료" , t.refund_date=sysdate(), bs.`key`=null, bs.`row`=null, bs.`column`=null, bs.ticketing_id=null WHERE t.ticketing_id=bs.ticketing_id and t.ticketing_id = ?';
   let params = [req.params.ticketing_id];
   console.log(params);
   connection.query(sql, params,
