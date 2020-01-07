@@ -145,6 +145,29 @@ app.get('/ticketing/seats', (req, res) => {
     }
   );
 });
+//좌석 유무 조회
+app.get('/ticketing/seat:ticket_id', (req, res) => {
+  let sql = 'select bs.`key`, bs.ticketing_id, bs.`row`, bs.`column` from book_seat bs join ticketing t on t.ticketing_id=bs.ticketing_id where t.show_id=(select show_id from ticketing where ticketing_id=?)';
+  console.log(req.params.ticket_id);
+  let params = [req.params.ticket_id];
+  connection.query(sql, params,
+  (err, rows, fields) => {
+  res.send(rows);
+  }
+)
+});
+// app.get('/api/QNAS/:QnA_id',(req,res) => {
+//   console.log(req.params.QnA_id)
+//   let params = [req.params.QnA_id]
+//   connection.query(
+//     // "select show_title, start_date, end_date from showdb.show",
+//   // 'select * from `qna` order by `group_number` desc, `order` asc',
+//   'Update `QNA` set `QnA_content` = ? where `QnA_id` = ?',params,
+//    (err,rows,fields) => {
+//       res.send(rows);
+//    }
+//  )
+// });
 
 
 
@@ -454,34 +477,26 @@ app.post('/api/troupManagementAdd1',parser,(req,res)=>{
             });
 
 
-
-            
-app.post('/api/QNAS',parser,(req,res)=>{
-  let sql ="INSERT INTO `QNA` (`QnA_id`,`QnA_title`, `QnA_content`, `user_id`, `QnA_date`, `QnA_views`) VALUES (?,?,?,?,?,?)";
-    console.log("서버단입니다.")
-    let QnA_id = req.body.QnA_id;
-    let QnA_title = req.body.QnA_title;
-    let QnA_content = req.body.QnA_content;
-    let user_id = req.body.user_id;
-    let QnA_date = req.body.QnA_date;
-    let QnA_views = req.body.QnA_views;
-    // console.log(QnA_id)
-    // console.log(QnA_title)
-    // console.log(QnA_content)
-    console.log("**********************************************************")
-    console.log(QnA_date)
-    // console.log(QnA_views)
-// console.log(rew);
-// console.log(req.body);
-  let params = [QnA_id, QnA_title, QnA_content, user_id, QnA_date, QnA_views];
-
+app.post('/api/QNA_re/:QnA_id',(req,res) => {
+  //let sql = 'Update `qna` set `QnA_title` =?, `QnA_content` = ?  where `user_id` = ? and and `QnA_id` =?'
+  let sql = 'Insert INTO `QNA`(QnA_id, group_number, order, depth, QnA_title, QnA_content, QnA_date, user_id) '
+  + 'values(qna_seq.nextval, ?,?,?,sysdate(),?) '
+  let QnA_title = req.body.QnA_title;
+  let QnA_content = req.body.QnA_content;
+  let user_id = req.body.user_id;
+  let group_number = req.body.group_number;
+  // let user_id = req.body.user_id; 
+  //let params = [QnA_title, QnA_content, user_id, QnA_id];
+  let params = [QnA_title, QnA_content, user_id, group_number];
+  console.log(params)
   connection.query(sql,params,
-    (err, rows, fields) => {
+  (err,rows,fields) => {
       res.send(rows);
-      console.log(err);
-      console.log(params);
-    })
+   }
+ )
 });
+            
+
 
 app.get('/api/QNAS',(req,res) => {
   connection.query(

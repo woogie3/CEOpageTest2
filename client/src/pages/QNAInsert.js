@@ -9,12 +9,9 @@ class QnAInsert extends React.Component {
         super(props);
         console.log(props)
         this.state={
-            QnA_id: '',
             user_id: '',
             QnA_title: '',
             QnA_content: '',
-            QnA_date: '',
-            QnA_views: '',
             // QNAS: '',
             completed: 0
 
@@ -25,12 +22,9 @@ class QnAInsert extends React.Component {
     }
     stateRefresh() {
         this.setState({
-            QnA_id: '',
             user_id: '',
             QnA_title: '',
             QnA_content: '',
-            QnA_date: '',
-            QnA_views: '',
             // QNAS: '',
             completed: 0
         });
@@ -44,12 +38,9 @@ class QnAInsert extends React.Component {
        this.axios();
        this.props.history.push('/QnA');
         this.setState({
-            QnA_id: '',
             user_id: '',
             QnA_title: '',
-            QnA_content: '',
-            QnA_date: '',
-            QnA_views: ''
+            QnA_content: ''
 
         })
     }
@@ -63,13 +54,10 @@ class QnAInsert extends React.Component {
 
     axios = async () =>{
         var params = new URLSearchParams();
-        params.append('QnA_id', this.state.QnA_id)
         params.append('QnA_title', this.state.QnA_title)
         params.append('QnA_content', this.state.QnA_content)
         params.append('user_id', this.state.user_id)
-        params.append('QnA_date', this.state.QnA_date)
-        params.append('QnA_views', this.state.QnA_views)
-        await axios.post('/api/QNAS', params)
+        await axios.post('/api/QNA_re', params)
         .then((Response) => {
          console.log(Response);   
         }).catch((ex)=>{
@@ -106,16 +94,12 @@ class QnAInsert extends React.Component {
 
 
     render() {
-        console.log(this.state.QnA_id)
         return (
             <form stateRefresh={this.stateRefresh} onSubmit={this.handleFormsubmit}>
-                <h1>QNA문의하기</h1>
-                글번호: <input type="text" name="QnA_id" values={this.state.QnA_id} onChange={this.handleValueChange} /> <br />
+                <h1>답변 작성</h1>
                 제목 : <input type="text" name="QnA_title" values={this.state.QnA_title} onChange={this.handleValueChange} /> <br />
                 내용 : <input type="text" name="QnA_content" values={this.state.QnA_content} onChange={this.handleValueChange} /> <br />
                 작성자 : <input type="text" name="user_id" values={this.state.user_id} onChange={this.handleValueChange} /> <br />
-                등록일: <input type="text" name="QnA_date" values={this.state.QnA_date} onChange={this.handleValueChange} /> <br />
-                조회수: <input type="text" name="QnA_views" values={this.state.QnA_views} onChange={this.handleValueChange} /> <br />
                 <button type="submit" >글쓰기</button>
             </form>
         )

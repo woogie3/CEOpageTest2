@@ -1,7 +1,8 @@
 import React,{ Component } from 'react';
 import TicketListTable from 'components/TicketListTable';
 import Table from '@material-ui/core/Table';
-import formAxios, {post} from 'axios';
+import formAxios from 'axios';
+import formAxios2 from 'axios';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
@@ -14,7 +15,7 @@ import SeatViewTable from 'components/SeatViewTable';
 
 
 const show_times=["","91221","91222","91223","91224","91225","91226"]
-const options =[ "시간대를 선택해주세요", "10:00~12:00", "13:00~15:00", "16:00~18:00", "19:00~21:00"]
+const options =[ "시간대를 선택해주세요","선택안함", "10:00~12:00", "13:00~15:00", "16:00~18:00", "19:00~21:00"]
 class TicketManagement extends Component{
         constructor(props) {
         super(props);
@@ -46,7 +47,7 @@ class TicketManagement extends Component{
       
 
     formAxios = () =>{
-      var params = new URLSearchParams();
+      let params = new URLSearchParams();
       params.append('show_time', this.state.show_time)
       params.append('row', this.state.row)
       params.append('column', this.state.column)
@@ -59,6 +60,19 @@ class TicketManagement extends Component{
       })
       console.log(params)
     }
+   
+    formAxios2 = () =>{
+      let params = new URLSearchParams();
+      params.append('ticket_id', this.state.ticket_id)
+      formAxios2.post('/ticketing/seat:ticket_id', params)
+      .then((Response) => {
+        console.log(Response);
+      }).catch((ex)=>{
+        console.log(ex)
+      })
+      console.log(params)
+    }
+
       stateRefresh = () => {
         this.setState({
           ticketings:'',
@@ -75,6 +89,7 @@ class TicketManagement extends Component{
           change_type: ''
           
       });
+      
         this.callApi1()
         .then(res => this.setState({ticketings: res}))
         .catch(err => console.log(err));
@@ -139,10 +154,6 @@ class TicketManagement extends Component{
         e.preventDefault();
         this.formAxios();
         this.setState({
-          show_time: '',
-          seatNo: '',
-          row: '',
-          column: '',
           ticket_id: ''
         })
       }
@@ -285,6 +296,11 @@ class TicketManagement extends Component{
               <input type="reset" value="취소"></input><br/>
               <br/>
               <h3>좌석표</h3>
+              <br/>
+              <label class="change_seat_number"> 예매번호 : </label>
+              <input type="text" class="change_seat_number_box" name="ticket_id" maxlength="10" value={this.state.ticket_id} onChange={this.handleValueChange}/>
+              <input type="button" onClick={this.handleFormSubmit2} value="조회"></input>
+              <br/>
               <table>
               {this.state.seats ? seatComponents(this.state.seats) :
                 <td colSpan="7" align ="center" value>

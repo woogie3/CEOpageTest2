@@ -63,7 +63,7 @@ class QnA extends Component {
 
   render() {
     // const { classes } = this.props;
-    const cellList = ["글번호", "제목",  "등록일", "조회수", "아이디"];
+    const cellList = ["글번호", "제목" , "조회수", "등록일"];
 
     return (
       <div>
@@ -72,11 +72,11 @@ class QnA extends Component {
           <TableHead>
             <TableRow>
               {cellList.map(c => {
-                return <TableCell key={c.toString()}>{c}</TableCell>
+                return <TableCell align ="center">{c}</TableCell>
               })}
             </TableRow>
           </TableHead>
-          <TableBody>            
+          <TableBody>        
               {this.state.QNAS ? this.state.QNAS.map(c => {
                 return (    
                 <QNAS stateRefresh={this.stateRefresh} key={c.QnA_id} QnA_id={c.QnA_id} QnA_title={c.QnA_title} user_id={c.user_id} QnA_content={c.QnA_content} QnA_date={c.QnA_date} QnA_views={c.QnA_views} />   
@@ -84,7 +84,7 @@ class QnA extends Component {
           </TableBody>
         </Table>
         {/* <button type="submit" onClick="QNAInsert"> 글쓰기</button> */}
-        < Link to="/QNAInsert">글쓰기</Link>
+        
         {/* <Button variant="contained" color="primary" onClick="./QnAInsert">글쓰기 </Button> */}
         {/* <Button variant="contained" color="black" onClick={(e) => {this.Change(this.props.user_id)}}>환불</Button> */}
       </div>
