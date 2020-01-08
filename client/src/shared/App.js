@@ -31,8 +31,9 @@ class App extends Component {
                 <Route path="/RegistorationMenu" component={RegistorationMenu}/>
                 <Route path="/ManagementMenu" component={ManagementMenu}/>
                 <Route path="/Analaysis" component={Analysis}/>
-                <Route path="/QnA" component={QnA}/>
+                <Route exact path="/QNA" component={QnA}/>
                 <Route path="/QNAInsert" component={QNAInsert}/>
+                <Route path="/QNAUpdate" component={QNAInsert}/>
                 </Switch>
                 </div>
                 </Router>

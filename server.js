@@ -14,6 +14,8 @@ const mysql = require('mysql');
 
 const multer = require('multer');
 const upload = multer({dest: './upload'})
+const Users = require("./routes/Users");
+app.use("/users", Users);
 
 const connection = mysql.createConnection({
   host: conf.host,
@@ -477,56 +479,56 @@ app.post('/api/troupManagementAdd1',parser,(req,res)=>{
             });
 
 
-app.post('/api/QNA_re/:QnA_id',(req,res) => {
-  //let sql = 'Update `qna` set `QnA_title` =?, `QnA_content` = ?  where `user_id` = ? and and `QnA_id` =?'
-  let sql = 'Insert INTO `QNA`(QnA_id, group_number, order, depth, QnA_title, QnA_content, QnA_date, user_id) '
-  + 'values(qna_seq.nextval, ?,?,?,sysdate(),?) '
-  let QnA_title = req.body.QnA_title;
-  let QnA_content = req.body.QnA_content;
-  let user_id = req.body.user_id;
-  let group_number = req.body.group_number;
-  // let user_id = req.body.user_id; 
-  //let params = [QnA_title, QnA_content, user_id, QnA_id];
-  let params = [QnA_title, QnA_content, user_id, group_number];
-  console.log(params)
-  connection.query(sql,params,
-  (err,rows,fields) => {
-      res.send(rows);
-   }
- )
-});
+
             
 
-
+//QNA게시판 조회
 app.get('/api/QNAS',(req,res) => {
   connection.query(
     // "select show_title, start_date, end_date from showdb.show",
   // 'select * from `qna` order by `group_number` desc, `order` asc',
-  'select `QnA_id`,  `QnA_title`, `QnA_content`, `user_id`, `QnA_date`, `QnA_views` from `QNA`',
+  'SELECT * FROM `QNA` ORDER BY `group_number` DESC, `order` ASC, `depth` ASC',
    (err,rows,fields) => {
       res.send(rows);
    }
  )
 });
+//답글 수정
 app.get('/api/QNAS/:QnA_id',(req,res) => {
   console.log(req.params.QnA_id)
   let params = [req.params.QnA_id]
   connection.query(
-    // "select show_title, start_date, end_date from showdb.show",
-  // 'select * from `qna` order by `group_number` desc, `order` asc',
   'Update `QNA` set `QnA_content` = ? where `QnA_id` = ?',params,
    (err,rows,fields) => {
       res.send(rows);
    }
  )
 });
-
+// 답글 삭제
 app.delete('/api/QNAS/:QnA_id',(req,res) => {
-  // console.log(req.params.QnA_id)
+  console.log(req.params.QnA_id)
   let params = [req.params.QnA_id]
   connection.query(
   'delete from `QNA` where `QnA_id` = ?',params,
    (err,rows,fields) => {
+      res.send(rows);
+   }
+ )
+});
+//답글 입력
+app.post('/api/QNAInsert/:QnA_id',(req,res) => {
+  //let sql = 'Update `qna` set `QnA_title` =?, `QnA_content` = ?  where `user_id` = ? and and `QnA_id` =?'
+  let sql = 'INSERT INTO `QNA`(`group_number`, `order`, `depth`, `QnA_title`, `QnA_content`, `QnA_date`, `user_id`) values((select q.`group_number` FROM `QNA` q where q.`QnA_id`=?), (select max(q.`order`) from `QNA` q where  q.`QnA_id`=?)+1, (select max(q.`depth`) from `QNA` q where  q.`QnA_id`=?)+1, concat("└Re : ",?), ?, now(), ?)';
+  let QnA_id = req.params.QnA_id;
+  let QnA_title = req.body.QnA_title;
+  let QnA_content = req.body.QnA_content;
+  let user_id = req.body.user_id;
+  // let user_id = req.body.user_id; 
+  //let params = [QnA_title, QnA_content, user_id, QnA_id];
+  let params = [QnA_id, QnA_id, QnA_id, QnA_title, QnA_content, user_id];
+  console.log(params)
+  connection.query(sql,params,
+  (err,rows,fields) => {
       res.send(rows);
    }
  )

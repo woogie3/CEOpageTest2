@@ -12,4 +12,5 @@ export { default as TroupManagementUpdate} from './TroupManagementUpdate';
 export { default as ShowManagement} from './ShowManagement';
 export { default as ShowManagementAdd} from './ShowManagementAdd';
 export { default as ShowManagementUpdate} from './ShowManagementUpdate';
+export { default as QNAUpdate} from './QNAUpdate';
 // export { default as HeaderMenu} from './HeaderMenu'
